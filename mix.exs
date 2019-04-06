@@ -43,6 +43,9 @@ defmodule GpsTracker.MixProject do
       # UART
       {:circuits_uart, "~> 1.3"},
 
+      # Wifi
+      {:nerves_network, "~> 0.5"},
+
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
       {:nerves_init_gadget, "~> 0.4", targets: @all_targets},
