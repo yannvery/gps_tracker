@@ -1,6 +1,8 @@
 defmodule GpsTracker.DataFetcher do
   use GenServer
 
+  alias GpsTracker.Transpondeur
+
   @doc """
   Start the fetcher and open communication with GPS card.
   """

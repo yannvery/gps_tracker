@@ -16,6 +16,7 @@ defmodule GpsTracker.Application do
     [
       {Registry, [keys: :unique, name: GpsTracker.Registry]},
       {Circuits.UART, [name: {:via, Registry, {GpsTracker.Registry, "uart"}}]},
+      {GpsTracker.Transpondeur, ["http://localhost:4000/api/position"]},
       {GpsTracker.DataFetcher, []}
     ]
   end
