@@ -10,9 +10,7 @@ defmodule GpsTracker.DataFetcher do
     GenServer.start_link(__MODULE__, state, name: __MODULE__)
   end
 
-  @doc """
-  GenServer.init/1 callback
-  """
+  @impl true
   def init(state) do
     [{uart, nil}] = Registry.lookup(GpsTracker.Registry, "uart")
     Circuits.UART.configure(uart, framing: {Circuits.UART.Framing.Line, separator: "\r\n"})
@@ -21,17 +19,14 @@ defmodule GpsTracker.DataFetcher do
     {:ok, state}
   end
 
+  @impl true
   def handle_info({:circuits_uart, _port, data}, state) do
     state =
       case GpsTracker.Nmea.parse(data) do
-        {:ok, position} -> position
+        {:ok, position} -> Transpondeur.emit(position)
         {:error, _} -> state
       end
 
     {:noreply, state}
-  end
-
-  def version do
-    "1.0"
   end
 end
