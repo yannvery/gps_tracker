@@ -6,4 +6,6 @@
 erl_crash.dump
 *.ez
 *.beam
+*.swp
+*.swo
 /config/*.secret.exs
