@@ -52,7 +52,7 @@ defmodule GpsTracker.MixProject do
 
       # Json Encodage
       {:poison, "~> 3.1"},
-      {:httpoison, "~> 1.4"},
+      {:httpotion, "~> 3.1.0"},
 
       # Dependencies for specific targets
       {:nerves_system_rpi, "~> 1.6", runtime: false, targets: :rpi},

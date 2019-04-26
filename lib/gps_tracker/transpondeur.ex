@@ -31,9 +31,10 @@ defmodule GpsTracker.Transpondeur do
   def handle_cast({:emit, position}, endpoint) do
     {:ok, json} = Poison.encode(position)
 
-    HTTPoison.post(endpoint, "{\"body\": #{json}}", [
-      {"Content-Type", "application/json"}
-    ])
+    HTTPotion.post(endpoint,
+      body: json,
+      headers: ["User-Agent": "My App", "Content-Type": "application/json"]
+    )
 
     {:noreply, endpoint}
   end
