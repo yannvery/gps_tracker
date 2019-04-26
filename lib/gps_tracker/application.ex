@@ -8,7 +8,7 @@ defmodule GpsTracker.Application do
   use Application
 
   def start(_type, _args) do
-    opts = [strategy: :one_for_one, name: GpsTracker.Supervisor]
+    opts = [strategy: :one_for_all, name: GpsTracker.Supervisor]
     Supervisor.start_link(children(@target), opts)
   end
 
