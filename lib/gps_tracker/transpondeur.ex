@@ -15,6 +15,13 @@ defmodule GpsTracker.Transpondeur do
     GenServer.cast(__MODULE__, {:emit, coordinates})
   end
 
+  @doc """
+  Retrieve the pid of the started process
+  """
+  def pid() do
+    GenServer.call(__MODULE__, :pid)
+  end
+
   @impl true
   def init(endpoint) do
     {:ok, endpoint}
@@ -29,5 +36,10 @@ defmodule GpsTracker.Transpondeur do
     ])
 
     {:noreply, endpoint}
+  end
+
+  @impl true
+  def handle_call(:pid, _from, state) do
+    {:reply, self(), state}
   end
 end

@@ -4,6 +4,13 @@ defmodule GpsTracker.DataFetcher do
   alias GpsTracker.Transpondeur
 
   @doc """
+  Retrieve the pid of the started process
+  """
+  def pid() do
+    GenServer.call(__MODULE__, :pid)
+  end
+
+  @doc """
   Start the fetcher and open communication with GPS card.
   """
   def start_link(state \\ []) do
@@ -23,10 +30,18 @@ defmodule GpsTracker.DataFetcher do
   def handle_info({:circuits_uart, _port, data}, state) do
     state =
       case GpsTracker.Nmea.parse(data) do
-        {:ok, position} -> Transpondeur.emit(position)
-        {:error, _} -> state
+        {:ok, position} ->
+          Transpondeur.emit(position)
+
+        {:error, _} ->
+          state
       end
 
     {:noreply, state}
+  end
+
+  @impl true
+  def handle_call(:pid, _from, state) do
+    {:reply, self(), state}
   end
 end
