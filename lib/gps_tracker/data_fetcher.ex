@@ -18,22 +18,27 @@ defmodule GpsTracker.DataFetcher do
   end
 
   @impl true
-  def init(state) do
+  def init(_state) do
     [{uart, nil}] = Registry.lookup(GpsTracker.Registry, "uart")
     Circuits.UART.configure(uart, framing: {Circuits.UART.Framing.Line, separator: "\r\n"})
     Circuits.UART.open(uart, "ttyAMA0", speed: 9600, active: true)
 
-    {:ok, state}
+    {:ok, %{current_position: nil}}
   end
 
   @impl true
-  def handle_info({:circuits_uart, _port, data}, state) do
+  def handle_info({:circuits_uart, port, data}, state) do
+    receive_data({:circuits_uart, port, data}, state)
+  end
+
+  def receive_data({:circuits_uart, _port, data}, state) do
     state =
       case GpsTracker.Nmea.parse(data) do
         {:ok, position} ->
           Transpondeur.emit(position)
+          %{current_position: position}
 
-        {:error, _} ->
+        _ ->
           state
       end
 
