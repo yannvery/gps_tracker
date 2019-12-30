@@ -10,6 +10,9 @@ use Mix.Config
 
 config :nerves, :firmware, rootfs_overlay: "rootfs_overlay"
 
+config :gps_server,
+  position_endpoint: System.get_env("GPS_SERVER_ENDPOINT")
+
 # Use shoehorn to start the main application. See the shoehorn
 # docs for separating out critical OTP applications such as those
 # involved with firmware updates.
@@ -55,8 +58,6 @@ config :nerves_firmware_ssh,
 node_name = if Mix.env() != :prod, do: "gps_tracker"
 
 config :nerves_init_gadget,
-  ifname: "usb0",
-  address_method: :dhcpd,
   mdns_domain: "nerves.local",
   node_name: node_name,
   node_host: :mdns_domain,
@@ -75,6 +76,10 @@ config :nerves_network, :default,
       ]
     ]
   ]
+
+if Mix.target() != :host do
+  import_config "target.exs"
+end
 
 # Import target specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
